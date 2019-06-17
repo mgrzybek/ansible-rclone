@@ -1,0 +1,19 @@
+# {{ ansible_managed }}
+[Unit]
+Description=nomad server service
+Documentation=http://rclone.org
+After=network.target
+
+[Service]
+Type=notify
+EnvironmentFile={{ rclone_sysconfig }}
+
+Environment=GOMAXPROCS=2
+Restart=on-failure
+KillSignal=SIGTERM
+
+ExecStart=rclone mount {{ options }} {{ item.remote_src }} {{ item.dest_path }}
+
+[Install]
+WantedBy=multi-user.target
+

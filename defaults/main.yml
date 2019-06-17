@@ -1,0 +1,42 @@
+---
+
+rclone_cluster_aware: false
+rclone_cluster_resource_name:
+
+rclone_mount_options:
+    - "--allow-other"
+    - "--allow-root"
+
+rclone_download: https://downloads.rclone.org
+
+rclone_mounts: []
+#rclone_mounts:
+#  - source:
+#    destination:
+#    options:
+
+rclone_use_docker: false
+rclone_docker_image:
+rclone_docker_tag: latest
+rclone_docker_env: {}
+rclone_docker_published_ports: []
+rclone_docker_volumes: []
+
+rclone_package_state: present
+cache_timeout: 600
+
+rclone_config_consul: false
+rclone_consul_services_path: /etc/consul.d
+#rclone_consul:
+#    - service:
+#        name: ""
+#        tags:
+#            - ""
+#            - "traefik.enable=false"
+#        port: 
+#        checks:
+#            - args:
+#                - "systemctl"
+#                - "status"
+#                - ""
+#              interval: "60s

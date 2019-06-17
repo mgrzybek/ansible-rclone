@@ -1,0 +1,91 @@
+---
+
+- name: Set default facts
+  set_fact:
+    use_firewalld: false
+    configure_consul: false
+    system_arch: "{{ ansible_system | regex_replace('x86_64','amd64') }}"
+
+- name: Check running services
+  service_facts:
+
+- name: Check Consul configuration
+  when:
+    - rclone_config_consul | lower == 'true'
+    - not (ansible_facts.services | map('quote') | join(',') | regex_search('consul'))
+  fail: msg="Consul service not found - Cannot configure it"
+
+- name: Check cluster configuration
+  when:
+    - rclone_cluster_aware | lower == 'true'
+    - not (ansible_facts.services | map('quote') | join(',') | regex_search('pacemaker'))
+  fail: msg="Pacemaker service not found - Cannot configure it"
+
+- name: APT-based
+  when: ansible_os_family | lower == 'debian'
+  block:
+    - name: Get repo key
+      register: repo_key_result
+      notify: delete repo key file
+      get_url:
+        url: "{{ rclone_repo_key_url }}"
+        dest: /tmp/{{ clean_role_name }}-repo.key
+
+    - name: Installation de la cle de depot
+      command: apt-key add {{ repo_key_result.dest }}
+
+    - name: Create apt repo
+      get_url: url={{ rclone_repo_apt_url }} dest=/etc/apt/sources.list.d/rclone.list
+
+- name: RPM-based
+  when: ansible_os_family | lower == 'redhat'
+  block:
+    - name: Create yum repo
+      yum_repository:
+        name: rclone
+        description: rclone repo
+        baseurl: "{{ rclone_repo_rpm_url }}"
+        gpgkey: "{{ rclone_repo_key }}"
+
+- name: Set local fact - Configure firewalld
+  when:
+    - not (ansible_facts.services | map('quote') | join(',') | regex_search('firewalld'))
+  set_fact:
+    use_firewalld: true
+
+- name: Get Consul details
+  when:
+    - rclone_config_consul | lower == 'true'
+    - ansible_facts.services | map('quote') | join(',') | regex_search('consul')
+  block:
+    - name: Get Consul service details
+      systemd: name=consul
+      register: consul_systemd
+
+    - name: Set Consul facts
+      set_fact:
+        consul_bin: "{{ consul_systemd.status.ExecStart | regex_replace('^.+path=(.+?)\\s+.+?$','\\1') }}"
+        configure_consul: true
+
+- name: Cluster-aware facts
+  when: rclone_cluster_aware | lower == 'true'
+  block:
+    - name: Get crm node name
+      command: crm_node -n
+      register: crm_result
+
+    - name: Set cluster facts
+      set_fact:
+        crm_node_name: "{{ crm_result.stdout }}"
+
+- name: Get rclone last version number
+  register: uri_result
+  uri: url=https://downloads.rclone.org/version.txt
+
+- set_fact:
+    rclone_version: "{{ uri_result.content | regex_replace('^.+\s+(.+)$','\1') }}"
+
+- name: Create package URL
+  set_fact:
+    package_url: "{{ https://downl
+    {{rclone_download }}/{{ rclone_version }}/rclone-{{ rclone_version }}-{{ ansible_system | lower }}-{{ system_arch }}.{{ rclone_package_extension }}

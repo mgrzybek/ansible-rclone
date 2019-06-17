@@ -1,0 +1,11 @@
+---
+
+rclone_repo_rpm_url: 
+rclone_repo_key_url: 
+
+rclone_distro_packages: []
+rclone_package_extension: rpm
+
+rclone_sysconfig: /etc/sysconfig
+
+rclone_cluster_command: pcs
