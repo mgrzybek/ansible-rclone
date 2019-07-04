@@ -4,7 +4,7 @@
   set_fact:
     use_firewalld: false
     configure_consul: false
-    system_arch: "{{ ansible_system | regex_replace('x86_64','amd64') }}"
+    system_arch: "{{ ansible_architecture | regex_replace('x86_64','amd64') }}"
 
 - name: Check running services
   service_facts:
@@ -22,14 +22,17 @@
   fail: msg="Pacemaker service not found - Cannot configure it"
 
 - name: APT-based
-  when: ansible_os_family | lower == 'debian'
+  when:
+    - ansible_os_family | lower == 'debian'
+    - rclone_repo_key_url != None
+    - rclone_repo_apt_url != None
   block:
     - name: Get repo key
       register: repo_key_result
       notify: delete repo key file
       get_url:
         url: "{{ rclone_repo_key_url }}"
-        dest: /tmp/{{ clean_role_name }}-repo.key
+        dest: /tmp/rclone-repo.key
 
     - name: Installation de la cle de depot
       command: apt-key add {{ repo_key_result.dest }}
@@ -38,7 +41,10 @@
       get_url: url={{ rclone_repo_apt_url }} dest=/etc/apt/sources.list.d/rclone.list
 
 - name: RPM-based
-  when: ansible_os_family | lower == 'redhat'
+  when:
+    - ansible_os_family | lower == 'redhat'
+    - rclone_repo_key_url != None
+    - rclone_repo_rpm_url != None
   block:
     - name: Create yum repo
       yum_repository:
@@ -80,12 +86,12 @@
 
 - name: Get rclone last version number
   register: uri_result
-  uri: url=https://downloads.rclone.org/version.txt
+  uri: url=https://downloads.rclone.org/version.txt return_content=true
 
+- debug: var=uri_result
 - set_fact:
-    rclone_version: "{{ uri_result.content | regex_replace('^.+\s+(.+)$','\1') }}"
+    rclone_version: "{{ uri_result.content | regex_replace('^.+\\s+(.+)$','\\1') | regex_replace('\n$','') }}"
 
 - name: Create package URL
   set_fact:
-    package_url: "{{ https://downl
-    {{rclone_download }}/{{ rclone_version }}/rclone-{{ rclone_version }}-{{ ansible_system | lower }}-{{ system_arch }}.{{ rclone_package_extension }}
+    package_url: "{{rclone_download }}/{{ rclone_version }}/rclone-{{ rclone_version }}-{{ ansible_system | lower }}-{{ system_arch }}.{{ rclone_package_extension }}"
