@@ -5,7 +5,22 @@ rclone_cluster_resource_name:
 
 rclone_mount_options:
     - "--allow-other"
-    - "--allow-root"
+    - "-v"
+    - "--debug-fuse"
+    - "--config=/root/.config/rclone/rclone.conf"
+    - "--cache-tmp-upload-path=/tmp/rclone/upload"
+    - "--cache-chunk-path=/tmp/rclone/chunks"
+    - "--cache-workers=8"
+    - "--cache-writes"
+    - "--cache-dir=/tmp/rclone/vfs"
+    - "--cache-db-path=/tmp/rclone/db"
+    - "--no-modtime"
+    - "--drive-use-trash"
+    - "--stats=0"
+    - "--checkers=16"
+    - "--bwlimit=40M"
+    - "--dir-cache-time=60m"
+    - "--cache-info-age=60m"
 
 rclone_download: https://downloads.rclone.org
 
