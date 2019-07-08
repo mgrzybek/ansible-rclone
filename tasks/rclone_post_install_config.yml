@@ -7,7 +7,7 @@
     - option: key
       value: "{{ mount.os_password }}"
     - option: auth
-      value: "{{ mount.os_auth }}"
+      value: "{{ mount.os_auth_url }}"
     - option: tenant_id
       value: "{{ mount.os_tenant_id }}"
     - option: domain
