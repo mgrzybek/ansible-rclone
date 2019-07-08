@@ -20,6 +20,9 @@ Install the binary and create mountpoints:
          - { role: ansible-rclone }
       vars:
          rclone_mounts:
-           - name:
-             remote_src:
-             dest_path:
+           - remote_src: cloud:data
+             dest_path: /srv/data
+             os_auth_url: https://cloud.local:5000/v3
+             os_tenant_id: a8024d5f228f476cbc654eafc281e0e8
+             os_username: jhon
+             os_password: doe
