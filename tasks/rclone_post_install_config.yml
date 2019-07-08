@@ -3,7 +3,7 @@
     - option: type
       value: swift
     - option: user
-      value: "{{ mount.os_usermane }}"
+      value: "{{ mount.os_username }}"
     - option: key
       value: "{{ mount.os_password }}"
     - option: auth
