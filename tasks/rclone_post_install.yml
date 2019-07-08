@@ -18,12 +18,12 @@
   loop_control:
     loop_var: mount
 
-#- name: Consul service definition
-#  when:
-#    - configure_consul | lower == 'true'
-#  notify: reload consul
-#  template: src=service.consul.json.j2 dest={{ rclone_consul_services_path }}/{{ item.service.name }}.json
-#  with_items: "{{ rclone_consul }}"
+- name: Consul service definition
+  when:
+    - configure_consul | lower == 'true'
+  notify: reload consul
+  template: src=service.consul.json.j2 dest={{ rclone_consul_services_path }}/{{ item.service.name }}.json
+  with_items: "{{ rclone_consul }}"
 
 #- name: (Re)start docker
 #  when:
