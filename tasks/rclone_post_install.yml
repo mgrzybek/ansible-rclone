@@ -24,6 +24,8 @@
   notify: reload consul
   template: src=service.consul.json.j2 dest={{ rclone_consul_services_path }}/{{ item.service.name }}.json
   with_items: "{{ rclone_consul }}"
+  vars:
+    clean_remote_src: "{{ mount.remote_src | regex_replace('^(\\w+)?\\:.+$', '\\1') }}"
 
 #- name: (Re)start docker
 #  when:
