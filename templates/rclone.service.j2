@@ -14,7 +14,7 @@ Restart=on-failure
 RestartSec=10
 KillSignal=SIGTERM
 
-ExecStart=/usr/bin/rclone mount {{ rclone_mount_options | join(' ') }} {{ item.remote_src }} {{ item.dest_path }}
+ExecStart=/usr/bin/rclone -v mount {{ rclone_mount_options | join(' ') }} {{ item.remote_src }} {{ item.dest_path }}
 
 [Install]
 WantedBy=multi-user.target

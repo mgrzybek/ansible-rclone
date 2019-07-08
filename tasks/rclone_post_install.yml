@@ -13,8 +13,10 @@
   with_items: "{{ rclone_mounts }}"
 
 - name: Configure rclone.conf
-  with_items: "{{ rclone_mounts }}"
   include_tasks: rclone_post_install_config.yml
+  loop: "{{ rclone_mounts }}"
+  loop_control:
+    loop_var: mount
 
 #- name: Consul service definition
 #  when:
