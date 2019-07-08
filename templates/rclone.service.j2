@@ -1,7 +1,7 @@
 # {{ ansible_managed }}
 # https://www.jamescoyle.net/how-to/3116-rclone-systemd-startup-mount-script
 [Unit]
-Description=rclone storage mount - {{ item.remote_src }}
+Description=rclone storage mount - {{ item.remote_src | regex_replace('^(\w+)?\:.+$', '\\1') }}
 Documentation=http://rclone.org
 After=network.target
 

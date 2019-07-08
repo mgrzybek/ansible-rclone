@@ -1,7 +1,7 @@
 - name: Configure rclone.conf
   ini_file:
     path: /root/.config/rclone/rclone.conf
-    section: "{{ item.name }}"
+    section: "{{ item.remote_src | regex_replace('^(\w+)?\:.+$', '\\1') }}"
     option: type
     value: swift
     mode: 0600
@@ -9,7 +9,7 @@
 - name: Configure rclone.conf
   ini_file:
     path: /root/.config/rclone/rclone.conf
-    section: "{{ item.name }}"
+    section: "{{ item.remote_src | regex_replace('^(\w+)?\:.+$', '\\1') }}"
     option: env_auth
     value: true
     mode: 0600
@@ -17,7 +17,7 @@
 - name: Configure rclone.conf
   ini_file:
     path: /root/.config/rclone/rclone.conf
-    section: "{{ item.name }}"
+    section: "{{ item.remote_src | regex_replace('^(\w+)?\:.+$', '\\1') }}"
     option: endpoint_type
     value: public
     mode: 0600
