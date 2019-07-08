@@ -1,7 +1,7 @@
 ---
 
 - name: Configure rclone mounts
-  template: src=rclone.service.j2 dest=/etc/systemd/system/{{ item.name }}-{{ item.remote_src | regex_replace('\/','-') }}.service
+  template: src=rclone.service.j2 dest=/etc/systemd/system/{{ item.remote_src | regex_replace('\/','-') }}.service
   with_items: "{{ rclone_mounts }}"
   notify:
     - reload systemd
@@ -9,7 +9,7 @@
 #    - restart rclone resource
 
 - name: Configure rclone sysconfig
-  template: src=rclone.sysconfig.j2 dest={{ rclone_sysconfig}}/rclone-{{ item.name }}-{{ item.remote_src | regex_replace('\/','-') }}
+  template: src=rclone.sysconfig.j2 dest={{ rclone_sysconfig}}/rclone-{{ item.remote_src | regex_replace('\/','-') }}
   with_items: "{{ rclone_mounts }}"
 
 - name: Configure rclone.conf

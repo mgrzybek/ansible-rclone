@@ -88,7 +88,6 @@
   register: uri_result
   uri: url=https://downloads.rclone.org/version.txt return_content=true
 
-- debug: var=uri_result
 - set_fact:
     rclone_version: "{{ uri_result.content | regex_replace('^.+\\s+(.+)$','\\1') | regex_replace('\n$','') }}"
 
