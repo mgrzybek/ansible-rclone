@@ -1,22 +1,55 @@
 ---
 
-- name: Configure rclone.conf
-  with_items:
-    - option: type
-      value: swift
-    - option: user
-      value: "{{ mount.os_username }}"
-    - option: key
-      value: "{{ mount.os_password }}"
-    - option: auth
-      value: "{{ mount.os_auth_url }}"
-    - option: tenant_id
-      value: "{{ mount.os_tenant_id }}"
-    - option: domain
-      value: "{{ mount.os_domain | default('Default') }}"
+- name: Configure rclone.conf (type)
+  with_items: "{{ rclone_mounts }}"
   ini_file:
     path: /root/.config/rclone/rclone.conf
-    section: "{{ mount.remote_src | regex_replace('^(\\w+)?\\:.+$', '\\1') }}"
-    option: "{{ item.option }}"
-    value: "{{ item.value }}"
+    section: "{{ item.remote_src | regex_replace('^(\\w+)?\\:.+$', '\\1') }}"
+    option: type
+    value: swift
+    mode: 0600
+
+- name: Configure rclone.conf (user)
+  with_items: "{{ rclone_mounts }}"
+  ini_file:
+    path: /root/.config/rclone/rclone.conf
+    section: "{{ item.remote_src | regex_replace('^(\\w+)?\\:.+$', '\\1') }}"
+    option: user
+    value: "{{ item.os_username }}"
+    mode: 0600
+
+- name: Configure rclone.conf (key)
+  with_items: "{{ rclone_mounts }}"
+  ini_file:
+    path: /root/.config/rclone/rclone.conf
+    section: "{{ item.remote_src | regex_replace('^(\\w+)?\\:.+$', '\\1') }}"
+    option: key
+    value: "{{ item.os_password }}"
+    mode: 0600
+
+- name: Configure rclone.conf (auth)
+  with_items: "{{ rclone_mounts }}"
+  ini_file:
+    path: /root/.config/rclone/rclone.conf
+    section: "{{ item.remote_src | regex_replace('^(\\w+)?\\:.+$', '\\1') }}"
+    option: auth
+    value: "{{ item.os_auth_url }}"
+    mode: 0600
+
+- name: Configure rclone.conf (tenant_id)
+  with_items: "{{ rclone_mounts }}"
+  ini_file:
+    path: /root/.config/rclone/rclone.conf
+    section: "{{ item.remote_src | regex_replace('^(\\w+)?\\:.+$', '\\1') }}"
+    option: tenant_id
+    value: "{{ item.os_tenant_id }}"
+    mode: 0600
+
+- name: Configure rclone.conf (domain)
+  with_items: "{{ rclone_mounts }}"
+  ini_file:
+    path: /root/.config/rclone/rclone.conf
+    section: "{{ item.remote_src | regex_replace('^(\\w+)?\\:.+$', '\\1') }}"
+    option: domain
+    value: "{{ item.os_domain | default('Default') }}"
     mode: 0600

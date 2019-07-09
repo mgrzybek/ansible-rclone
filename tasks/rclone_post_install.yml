@@ -9,10 +9,7 @@
 #    - restart rclone resource
 
 - name: Configure rclone.conf
-  include_tasks: rclone_post_install_config.yml
-  loop: "{{ rclone_mounts }}"
-  loop_control:
-    loop_var: mount
+  import_tasks: rclone_post_install_config.yml
 
 - name: Consul service definition
   when:
