@@ -28,6 +28,6 @@
   with_items: "{{ systemd_service_result.results }}"
 
 - name: Restart rclone mounts
-  service: name={{ item.item.remote_src | regex_replace('\/','-') }} enabled=yes
+  service: name={{ item.item.remote_src | regex_replace('\/','-') }} state=restarted enabled=yes
   when: item.changed == true
   with_items: "{{ rclone_result.results }}"
