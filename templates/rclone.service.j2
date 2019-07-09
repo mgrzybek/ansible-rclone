@@ -13,6 +13,7 @@ Restart=on-failure
 RestartSec=10
 KillSignal=SIGTERM
 
+ExecStartPre=/bin/mkdir -p {{ item.dest_path }}
 ExecStart=/usr/bin/rclone -v mount {{ rclone_mount_options | join(' ') }} {{ item.remote_src }} {{ item.dest_path }}
 
 [Install]
