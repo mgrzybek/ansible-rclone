@@ -42,16 +42,3 @@ cache_timeout: 600
 
 rclone_config_consul: false
 rclone_consul_services_path: /etc/consul.d
-rclone_consul:
-    - service:
-        name: "rclone storage mount - {{ item.remote_src | regex_replace('^(\\w+)?\\:.+$', '\\1') }}"
-        tags:
-            - "rclone"
-            - "traefik.enable=false"
-        checks:
-            - args:
-                - "systemctl"
-                - "status"
-                - "{{ item.remote_src | regex_replace('^(\\w+)?\\:.+$', '\\1') }}.service"
-              interval: "60s"
-#        port: 

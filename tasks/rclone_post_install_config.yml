@@ -15,6 +15,6 @@
   ini_file:
     path: /root/.config/rclone/rclone.conf
     section: "{{ mount.remote_src | regex_replace('^(\\w+)?\\:.+$', '\\1') }}"
-    option: type
-    value: swift
+    option: "{{ item.option }}"
+    value: "{{ item.value }}"
     mode: 0600
