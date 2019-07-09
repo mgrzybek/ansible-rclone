@@ -1,6 +1,7 @@
 ---
 
 - name: Configure rclone mounts
+  register: systemd_service_result
   template: src=rclone.service.j2 dest=/etc/systemd/system/{{ item.remote_src | regex_replace('\/','-') }}.service
   with_items: "{{ rclone_mounts }}"
   notify:
@@ -17,3 +18,16 @@
   notify: reload consul
   template: src=service.consul.json.j2 dest={{ rclone_consul_services_path }}/{{ item.remote_src | regex_replace('\/','-') }}.json
   with_items: "{{ rclone_mounts }}"
+
+- name: Flushing handlers
+  meta: flush_handlers
+
+- name: Restart rclone mounts
+  service: name={{ item.dest | regex_replace('^.+?(\\w+).service$','') }} state=restarted enabled=yes
+  when: item.changed == true
+  with_items: "{{ systemd_service_result.results }}"
+
+- name: Restart rclone mounts
+  service: name={{ item.item.remote_src | regex_replace('\/','-') }} enabled=yes
+  when: item.changed == true
+  with_items: "{{ rclone_result.results }}"

@@ -1,6 +1,7 @@
 ---
 
 - name: Configure rclone.conf (type)
+  register: rclone_result
   with_items: "{{ rclone_mounts }}"
   ini_file:
     path: /root/.config/rclone/rclone.conf
@@ -10,6 +11,7 @@
     mode: 0600
 
 - name: Configure rclone.conf (user)
+  register: rclone_result
   with_items: "{{ rclone_mounts }}"
   ini_file:
     path: /root/.config/rclone/rclone.conf
@@ -19,6 +21,7 @@
     mode: 0600
 
 - name: Configure rclone.conf (key)
+  register: rclone_result
   with_items: "{{ rclone_mounts }}"
   ini_file:
     path: /root/.config/rclone/rclone.conf
@@ -28,6 +31,7 @@
     mode: 0600
 
 - name: Configure rclone.conf (auth)
+  register: rclone_result
   with_items: "{{ rclone_mounts }}"
   ini_file:
     path: /root/.config/rclone/rclone.conf
@@ -37,6 +41,7 @@
     mode: 0600
 
 - name: Configure rclone.conf (tenant_id)
+  register: rclone_result
   with_items: "{{ rclone_mounts }}"
   ini_file:
     path: /root/.config/rclone/rclone.conf
@@ -46,6 +51,7 @@
     mode: 0600
 
 - name: Configure rclone.conf (domain)
+  register: rclone_result
   with_items: "{{ rclone_mounts }}"
   ini_file:
     path: /root/.config/rclone/rclone.conf

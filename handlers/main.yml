@@ -1,22 +1,5 @@
 ---
 
-- name: restart rclone service
-  service: name=rclone state=restarted enabled=yes
-  when:
-    - rclone_post_config_restart_on_change | lower == 'true'
-    - rclone_cluster_aware | lower == 'false'
-    - rclone_use_docker | lower == 'false'
-
-- name: restart rclone resource
-  shell: >
-    "{{ rclone_cluster_command }} resource unmanage {{ rclone_cluster_resource_name }} && \
-    systemctl restart rclone.service && \
-    {{ rclone_cluster_command }} resource manage {{ rclone_cluster_resource_name }} && \
-    {{ rclone_cluster_command }} resource enable {{ rclone_cluster_resource_name }}"
-  when:
-    - rclone_post_config_restart_on_change | lower == 'true'
-    - rclone_cluster_aware | lower == 'true'
-
 - name: reload systemd
   systemd: daemon-reload=yes
 
@@ -31,3 +14,4 @@
 
 - name: delete repo key file
   file: path="{{ repo_key_result.dest }}" state=absent
+
