@@ -1,6 +1,6 @@
 {
     "service": {
-        "name": "rclone storage mount - {{ item.remote_src | regex_replace('^(\\w+)?\\:.+$', '\\1') }}",
+        "name": "rclone storage mount - {{ item.remote_src }}",
         "tags": [
           "rclone",
           "traefik.enable=false"
