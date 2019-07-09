@@ -8,9 +8,9 @@
 #    - restart rclone service
 #    - restart rclone resource
 
-- name: Configure rclone sysconfig
-  template: src=rclone.sysconfig.j2 dest={{ rclone_sysconfig}}/rclone-{{ item.remote_src | regex_replace('\/','-') }}
-  with_items: "{{ rclone_mounts }}"
+#- name: Configure rclone sysconfig
+#  template: src=rclone.sysconfig.j2 dest={{ rclone_sysconfig}}/rclone-{{ item.remote_src | regex_replace('\/','-') }}
+#  with_items: "{{ rclone_mounts }}"
 
 - name: Configure rclone.conf
   include_tasks: rclone_post_install_config.yml
