@@ -44,7 +44,7 @@ rclone_config_consul: false
 rclone_consul_services_path: /etc/consul.d
 rclone_consul:
     - service:
-        name: "rclone storage mount - {{ clean_remote_src }}"
+        name: "rclone storage mount - {{ item.remote_src | regex_replace('^(\\w+)?\\:.+$', '\\1') }}"
         tags:
             - "rclone"
             - "traefik.enable=false"
@@ -52,6 +52,6 @@ rclone_consul:
             - args:
                 - "systemctl"
                 - "status"
-                - "{{ clean_remote_src }}.service"
+                - "{{ item.remote_src | regex_replace('^(\\w+)?\\:.+$', '\\1') }}.service"
               interval: "60s"
 #        port: 

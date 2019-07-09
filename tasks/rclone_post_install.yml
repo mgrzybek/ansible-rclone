@@ -8,10 +8,6 @@
 #    - restart rclone service
 #    - restart rclone resource
 
-#- name: Configure rclone sysconfig
-#  template: src=rclone.sysconfig.j2 dest={{ rclone_sysconfig}}/rclone-{{ item.remote_src | regex_replace('\/','-') }}
-#  with_items: "{{ rclone_mounts }}"
-
 - name: Configure rclone.conf
   include_tasks: rclone_post_install_config.yml
   loop: "{{ rclone_mounts }}"
@@ -22,21 +18,5 @@
   when:
     - configure_consul | lower == 'true'
   notify: reload consul
-  template: src=service.consul.json.j2 dest={{ rclone_consul_services_path }}/{{ item.service.name }}.json
-  with_items: "{{ rclone_consul }}"
-  vars:
-    clean_remote_src: "{{ item.remote_src | regex_replace('^(\\w+)?\\:.+$', '\\1') }}"
-
-#- name: (Re)start docker
-#  when:
-#    - rclone_cluster_aware | lower == 'false'
-#    - rclone_use_docker | lower == 'true'
-#  block:
-#    - name: Start the container
-#      docker_container:
-#        state: started
-#        name: rclone-server
-#        image: "{{ rclone_docker_image }}"
-#        published_ports: "{{ rclone_docker_published_ports }}"
-#        volumes: "rclone_docker_volumes }}"
-#        env: "{{ rclone_docker_env }}"
+  template: src=service.consul.json.j2 dest={{ rclone_consul_services_path }}/{{ item.remote_src | regex_replace('\/','-') }}.json
+  with_items: "{{ rclone_mounts }}"

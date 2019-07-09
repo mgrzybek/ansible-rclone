@@ -1,1 +1,17 @@
-{{ item | to_nice_json }}
+{
+  "name": "rclone storage mount - {{ item.remote_src | regex_replace('^(\\w+)?\\:.+$', '\\1') }}",
+  "tags": [
+    "rclone",
+    "traefik.enable=false"
+  ],
+  "checks": [
+    {
+      "args": [
+        "systemctl",
+        "status",
+        "{{ item.remote_src | regex_replace('^(\\w+)?\\:.+$', '\\1') }}.service"
+      ],
+      "interval": "60s"
+    }
+  ]
+}
