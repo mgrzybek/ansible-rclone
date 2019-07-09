@@ -1,17 +1,19 @@
-"service": {
-    "name": "rclone storage mount - {{ item.remote_src | regex_replace('^(\\w+)?\\:.+$', '\\1') }}",
-    "tags": [
-      "rclone",
-      "traefik.enable=false"
-    ],
-    "checks": [
-      {
-        "args": [
-          "systemctl",
-          "status",
-          "{{ item.remote_src | regex_replace('^(\\w+)?\\:.+$', '\\1') }}.service"
+{
+    "service": {
+        "name": "rclone storage mount - {{ item.remote_src | regex_replace('^(\\w+)?\\:.+$', '\\1') }}",
+        "tags": [
+          "rclone",
+          "traefik.enable=false"
         ],
-        "interval": "60s"
-      }
-    ]
+        "checks": [
+          {
+            "args": [
+              "systemctl",
+              "status",
+              "{{ item.remote_src | regex_replace('^(\\w+)?\\:.+$', '\\1') }}.service"
+            ],
+            "interval": "60s"
+          }
+        ]
+    }
 }
