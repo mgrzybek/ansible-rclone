@@ -5,8 +5,6 @@ rclone_cluster_resource_name:
 
 rclone_mount_options:
     - "--allow-other"
-    - "-v"
-    - "--debug-fuse"
     - "--config=/root/.config/rclone/rclone.conf"
     - "--cache-tmp-upload-path=/tmp/rclone/upload"
     - "--cache-chunk-path=/tmp/rclone/chunks"
