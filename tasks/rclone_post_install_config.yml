@@ -8,7 +8,7 @@
     section: "{{ item.remote_src | regex_replace('^(\\w+)?\\:.+$', '\\1') }}"
     option: type
     value: swift
-    mode: 0600
+    mode: "{{ rclone_config_file_acl }}"
 
 - name: Configure rclone.conf (user)
   register: rclone_result
@@ -18,7 +18,7 @@
     section: "{{ item.remote_src | regex_replace('^(\\w+)?\\:.+$', '\\1') }}"
     option: user
     value: "{{ item.os_username }}"
-    mode: 0600
+    mode: "{{ rclone_config_file_acl }}"
 
 - name: Configure rclone.conf (key)
   register: rclone_result
@@ -28,7 +28,7 @@
     section: "{{ item.remote_src | regex_replace('^(\\w+)?\\:.+$', '\\1') }}"
     option: key
     value: "{{ item.os_password }}"
-    mode: 0600
+    mode: "{{ rclone_config_file_acl }}"
 
 - name: Configure rclone.conf (auth)
   register: rclone_result
@@ -38,7 +38,7 @@
     section: "{{ item.remote_src | regex_replace('^(\\w+)?\\:.+$', '\\1') }}"
     option: auth
     value: "{{ item.os_auth_url }}"
-    mode: 0600
+    mode: "{{ rclone_config_file_acl }}"
 
 - name: Configure rclone.conf (tenant_id)
   register: rclone_result
@@ -48,7 +48,7 @@
     section: "{{ item.remote_src | regex_replace('^(\\w+)?\\:.+$', '\\1') }}"
     option: tenant_id
     value: "{{ item.os_tenant_id }}"
-    mode: 0600
+    mode: "{{ rclone_config_file_acl }}"
 
 - name: Configure rclone.conf (domain)
   register: rclone_result
@@ -58,4 +58,4 @@
     section: "{{ item.remote_src | regex_replace('^(\\w+)?\\:.+$', '\\1') }}"
     option: domain
     value: "{{ item.os_domain | default('Default') }}"
-    mode: 0600
+    mode: "{{ rclone_config_file_acl }}"

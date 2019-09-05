@@ -22,6 +22,8 @@ rclone_mount_options:
 
 rclone_download: https://downloads.rclone.org
 
+rclone_config_file_acl: 600
+
 rclone_mounts: []
 #rclone_mounts:
 #  - source:
