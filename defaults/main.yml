@@ -38,6 +38,7 @@ rclone_docker_published_ports: []
 rclone_docker_volumes: []
 
 rclone_package_state: present
+rclone_version:
 cache_timeout: 600
 
 rclone_config_consul: false
