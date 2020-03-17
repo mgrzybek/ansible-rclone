@@ -30,7 +30,7 @@
 
 - name: Restart rclone mounts
   service: name={{ item.item.remote_src | regex_replace('\/','-') }} state=restarted enabled=yes
-  when: item.changed == true
+  when: item.changed | lower == 'true'
   with_items: "{{ rclone_result.results }}"
  
 - name: Start rclone mounts
