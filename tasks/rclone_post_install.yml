@@ -25,7 +25,7 @@
 
 - name: Restart rclone mounts
   service: name={{ item.dest | regex_replace('^.+?(\\w+).service$','') }} state=restarted enabled=yes
-  when: item.changed == true
+  when: item.changed | lower == 'true'
   with_items: "{{ systemd_service_result.results }}"
 
 - name: Restart rclone mounts
