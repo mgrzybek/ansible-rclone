@@ -1,111 +1,111 @@
 ---
 
-- name: Pre-install | Set default facts
+- name: Pre-Install | | Pre-install | Set default facts
   set_fact:
     use_firewalld: false
     configure_consul: false
     system_arch: "{{ ansible_architecture | regex_replace('x86_64','amd64') }}"
     install_rclone: false
 
-- name: Pre-install | Check running services
+- name: Pre-Install | | Pre-install | Check running services
   service_facts:
 
-- name: Pre-install | Check Consul configuration
+- name: Pre-Install | | Pre-install | Check Consul configuration
   when:
     - rclone_config_consul | lower == 'true'
     - not (ansible_facts.services | map('quote') | join(',') | regex_search('consul'))
   fail: msg="Consul service not found - Cannot configure it"
 
-- name: Pre-install | Check cluster configuration
+- name: Pre-Install | | Pre-install | Check cluster configuration
   when:
     - rclone_cluster_aware | lower == 'true'
     - not (ansible_facts.services | map('quote') | join(',') | regex_search('pacemaker'))
   fail: msg="Pacemaker service not found - Cannot configure it"
 
-- name: Pre-install | APT-based
+- name: Pre-Install | | Pre-install | APT-based
   when:
     - ansible_os_family | lower == 'debian'
     - rclone_repo_key_url != None
     - rclone_repo_apt_url != None
   block:
-    - name: Pre-install | Get repo key
+    - name: Pre-Install | | Pre-install | Get repo key
       register: repo_key_result
       notify: delete repo key file
       get_url:
         url: "{{ rclone_repo_key_url }}"
         dest: /tmp/rclone-repo.key
 
-    - name: Pre-install | Installation de la cle de depot
+    - name: Pre-Install | | Pre-install | Installation de la cle de depot
       command: apt-key add {{ repo_key_result.dest }}
 
-    - name: Pre-install | Create apt repo
+    - name: Pre-Install | | Pre-install | Create apt repo
       get_url: url={{ rclone_repo_apt_url }} dest=/etc/apt/sources.list.d/rclone.list
 
-- name: Pre-install | RPM-based
+- name: Pre-Install | | Pre-install | RPM-based
   when:
     - ansible_os_family | lower == 'redhat'
     - rclone_repo_key_url != None
     - rclone_repo_rpm_url != None
   block:
-    - name: Pre-install | Create yum repo
+    - name: Pre-Install | | Pre-install | Create yum repo
       yum_repository:
         name: rclone
         description: rclone repo
         baseurl: "{{ rclone_repo_rpm_url }}"
         gpgkey: "{{ rclone_repo_key }}"
 
-- name: Pre-install | Set local fact - Configure firewalld
+- name: Pre-Install | | Pre-install | Set local fact - Configure firewalld
   when:
     - not (ansible_facts.services | map('quote') | join(',') | regex_search('firewalld'))
   set_fact:
     use_firewalld: true
 
-- name: Pre-install | Get Consul details
+- name: Pre-Install | | Pre-install | Get Consul details
   when:
     - rclone_config_consul | lower == 'true'
     - ansible_facts.services | map('quote') | join(',') | regex_search('consul')
   block:
-    - name: Pre-install | Get Consul service details
+    - name: Pre-Install | | Pre-install | Get Consul service details
       systemd: name=consul
       register: consul_systemd
 
-    - name: Pre-install | Set Consul facts
+    - name: Pre-Install | | Pre-install | Set Consul facts
       set_fact:
         consul_bin: "{{ consul_systemd.status.ExecStart | regex_replace('^.+path=(.+?)\\s+.+?$','\\1') }}"
         configure_consul: true
 
-- name: Pre-install | Cluster-aware facts
+- name: Pre-Install | | Pre-install | Cluster-aware facts
   when: rclone_cluster_aware | lower == 'true'
   block:
-    - name: Get crm node name
+    - name: Pre-Install | | Get crm node name
       command: crm_node -n
       register: crm_result
 
-    - name: Pre-install | Set cluster facts
+    - name: Pre-Install | | Pre-install | Set cluster facts
       set_fact:
         crm_node_name: "{{ crm_result.stdout }}"
 
-- name: Pre-install | Check if rclone is already installed
+- name: Pre-Install | | Pre-install | Check if rclone is already installed
   register: shell_result
   shell: which rclone || true
 
-- name: Pre-install | Set local fact
+- name: Pre-Install | | Pre-install | Set local fact
   when: shell_result.stdout | length == 0
   set_fact: install_rclone=false
 
-- name: Pre-install | Deal with latest version
+- name: Pre-Install | | Pre-install | Deal with latest version
   when: rclone_package_state | lower == 'latest'
   block:
-    - name: Pre-install | Get rclone last version number
+    - name: Pre-Install | | Pre-install | Get rclone last version number
       register: uri_result
       uri: url=https://downloads.rclone.org/version.txt return_content=true
 
-    - name: Pre-install | Set local facts
+    - name: Pre-Install | | Pre-install | Set local facts
       set_fact:
         rclone_version: "{{ uri_result.content | regex_replace('^.+\\s+(.+)$','\\1') | regex_replace('\n$','') }}"
         install_rclone: true
 
-- name: Pre-install | Create package URL
+- name: Pre-Install | | Pre-install | Create package URL
   when: install_rclone | lower == 'true'
   set_fact:
     package_url: "{{ rclone_download }}/{{ rclone_version }}/rclone-{{ rclone_version }}-{{ ansible_system | lower }}-{{ system_arch }}.{{ rclone_package_extension }}"

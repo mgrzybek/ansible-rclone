@@ -1,9 +1,9 @@
 ---
 
-- name: Install rclone using packages
+- name: Install | | Install rclone using packages
   when: rclone_use_docker | lower == 'false'
   block:
-    - name: Install rclone packages
+    - name: Install | | Install rclone packages
       package:
         name: "{{ rclone_distro_packages }}"
         state: "{{ rclone_package_state }}"
@@ -18,7 +18,7 @@
         - install-yum
         - install-zypper
 
-    - name: Install rclone package from rclone.org
+    - name: Install | | Install rclone package from rclone.org
       when:
         - ansible_pkg_mgr == 'apt'
         - install_rclone | lower == 'true'
@@ -32,7 +32,7 @@
         - install-apt
         - install-yum
 
-    - name: Install rclone package from rclone.org
+    - name: Install | | Install rclone package from rclone.org
       when:
         - ansible_pkg_mgr == 'rpm'
         - install_rclone | lower == 'true'
@@ -46,7 +46,7 @@
         - install-apt
         - install-yum
 
-- name: Pull docker image
+- name: Install | | Pull docker image
   when: rclone_use_docker | lower == 'true'
   docker_image:
     name: "{{ rclone_docker_image }}"

@@ -1,6 +1,6 @@
 ---
 
-- name: Configure rclone.conf (type)
+- name: Post-Install | config | Configure rclone.conf (type)
   register: rclone_result
   with_items: "{{ rclone_mounts }}"
   ini_file:
@@ -10,7 +10,7 @@
     value: swift
     mode: "{{ rclone_config_file_acl }}"
 
-- name: Configure rclone.conf (user)
+- name: Post-Install | config | Configure rclone.conf (user)
   register: rclone_result
   with_items: "{{ rclone_mounts }}"
   ini_file:
@@ -20,7 +20,7 @@
     value: "{{ item.os_username }}"
     mode: "{{ rclone_config_file_acl }}"
 
-- name: Configure rclone.conf (key)
+- name: Post-Install | config | Configure rclone.conf (key)
   register: rclone_result
   with_items: "{{ rclone_mounts }}"
   ini_file:
@@ -30,7 +30,7 @@
     value: "{{ item.os_password }}"
     mode: "{{ rclone_config_file_acl }}"
 
-- name: Configure rclone.conf (auth)
+- name: Post-Install | config | Configure rclone.conf (auth)
   register: rclone_result
   with_items: "{{ rclone_mounts }}"
   ini_file:
@@ -40,7 +40,7 @@
     value: "{{ item.os_auth_url }}"
     mode: "{{ rclone_config_file_acl }}"
 
-- name: Configure rclone.conf (tenant_id)
+- name: Post-Install | config | Configure rclone.conf (tenant_id)
   register: rclone_result
   with_items: "{{ rclone_mounts }}"
   ini_file:
@@ -50,7 +50,7 @@
     value: "{{ item.os_tenant_id }}"
     mode: "{{ rclone_config_file_acl }}"
 
-- name: Configure rclone.conf (domain)
+- name: Post-Install | config | Configure rclone.conf (domain)
   register: rclone_result
   with_items: "{{ rclone_mounts }}"
   ini_file:
