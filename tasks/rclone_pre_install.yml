@@ -71,7 +71,6 @@
 
     - name: Pre-Install | Pre-install | Set Consul facts
       set_fact:
-        consul_bin: "{{ consul_systemd.status.ExecStart | regex_replace('^.+path=(.+?)\\s+.+?$','\\1') }}"
         configure_consul: true
 
 - name: Pre-Install | Pre-install | Cluster-aware facts
